@@ -3,11 +3,10 @@ package com.onboard.web.entity;
 import de.huxhorn.sulky.ulid.ULID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "ACCOUNT")
 @Getter
 @EqualsAndHashCode(callSuper = false, of = {"id"})
 public class AccountEntity extends BaseEntity {
@@ -23,7 +22,7 @@ public class AccountEntity extends BaseEntity {
     }
 
     @Id
-    @Column(columnDefinition = "CHAR(36)")
+    @Column(columnDefinition = "CHAR(26)")
     private String id;
 
     @Column(length = 256) //IETF 기준 맥시멈

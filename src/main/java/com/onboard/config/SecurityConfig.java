@@ -1,6 +1,6 @@
 package com.onboard.config;
 
-import com.onboard.auth.AuthExceptionEntryPoint;
+import com.onboard.auth.InvalidJwtEntryPoint;
 import com.onboard.auth.UserRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,7 +10,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 @EnableWebSecurity
@@ -36,7 +35,7 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
                 .and()
 
-                .exceptionHandling().authenticationEntryPoint(new AuthExceptionEntryPoint())
+                .exceptionHandling().authenticationEntryPoint(new InvalidJwtEntryPoint())
                 .and()
 
 //                .addfilterbe

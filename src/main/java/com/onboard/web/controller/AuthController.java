@@ -1,5 +1,6 @@
 package com.onboard.web.controller;
 
+import com.onboard.web.model.Req.SigninReq;
 import com.onboard.web.model.Req.SignupReq;
 import com.onboard.web.model.Resp.CommonResp;
 import com.onboard.web.model.Resp.RespBuilder;
@@ -30,5 +31,10 @@ public class AuthController {
         }
 
     }
+
+//    @PostMapping("/signin")
+//    public ResponseEntity<CommonResp> signin(@RequestBody SigninReq signinReq) {
+//
+//    }
 
 }

@@ -12,23 +12,21 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @Slf4j
-public class AuthExceptionEntryPoint implements AuthenticationEntryPoint {
+public class HasNoAuthorizationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest req,
                          HttpServletResponse resp,
                          AuthenticationException authException) throws IOException, ServletException {
 
-        log.info("Invalid JWT");
+        log.info("Has no authorization");
         PrintWriter writer =  resp.getWriter();
         resp.setHeader("Content-Type", "application/json");
-        resp.setStatus(HttpStatus.BAD_REQUEST.value());
-        String response = "{httpStatus: " + HttpStatus.BAD_REQUEST + ", msg: Need Login}";
+        resp.setStatus(HttpStatus.UNAUTHORIZED.value());
+        String response = "{httpStatus: " + HttpStatus.UNAUTHORIZED + ", msg: 권한이 없습니다.}";
 
         writer.print(response);
         writer.flush();
         writer.close();
-
-
     }
 }

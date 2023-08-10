@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity
+@Entity(name = "ACCOUNT_PW")
 @Getter
 public class AccountPwEntity extends BaseEntity {
 
@@ -21,9 +21,9 @@ public class AccountPwEntity extends BaseEntity {
     }
 
     @Id
-    @Column(name = "account_pw_id", columnDefinition = "CHAR(36)")
+    @Column(columnDefinition = "CHAR(26)")
     private String id;
 
-    @Column(length = 60, nullable = false)
+    @Column(columnDefinition = "CHAR(60)", nullable = false)
     private String password;
 }

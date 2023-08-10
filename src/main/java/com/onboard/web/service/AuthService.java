@@ -9,8 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,16 +20,21 @@ public class AuthService {
     private final AccountPwRepo accountPwRepo;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Transactional
     public boolean signup(SignupReq signupReq) {
+        // Save new AccountPwEntity
         String digest = bCryptPasswordEncoder.encode(signupReq.getPassword());
         AccountPwEntity accountPwEntity = new AccountPwEntity(digest);
-        AccountEntity accountEntity = new AccountEntity(signupReq.getEmail(), accountPwEntity);
-        log.info(accountEntity.getId());
-        log.info(accountEntity.getEmail());
-        log.info(accountEntity.getAccountPwEntity().getId());
-        log.info(accountEntity.getAccountPwEntity().getPassword());
-        accountPwRepo.save(accountPwEntity);
+        AccountPwEntity accountPwRes = accountPwRepo.save(accountPwEntity);
+
+        // Save new AccountEntity
+        AccountEntity accountEntity = new AccountEntity(signupReq.getEmail(), accountPwRes);
+//        log.info(accountEntity.getId());
+//        log.info(accountEntity.getEmail());
+//        log.info(accountEntity.getAccountPwEntity().getId());
+//        log.info(accountEntity.getAccountPwEntity().getPassword());
         AccountEntity res =  accountRepo.save(accountEntity);
+
         return accountEntity.getId().equals(res.getId());
     }
 }

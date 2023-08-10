@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice(basePackages = "com.onboard.web.controller")
 public class GlobalExceptionHandler {
 
+    // API 요청 파라미터 값의 유효성 위반
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CommonResp> inValidArgumentException(MethodArgumentNotValidException e) {
         String msg = e.getFieldErrors()
@@ -24,8 +25,9 @@ public class GlobalExceptionHandler {
         return RespBuilder.make(HttpStatus.BAD_REQUEST, msg);
     }
 
+    // 알 수 없는 에러
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<CommonResp> unknownExcpetionHandler(Exception e) {
+    public ResponseEntity<CommonResp> unknownExceptionHandler(Exception e) {
         log.warn("[FATAL ERROR] " + e.getMessage());
         return RespBuilder.make(HttpStatus.INTERNAL_SERVER_ERROR, "Unknown error");
     }
