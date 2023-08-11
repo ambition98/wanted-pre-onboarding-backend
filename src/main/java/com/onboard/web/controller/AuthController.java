@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Slf4j
@@ -32,9 +33,9 @@ public class AuthController {
 
     }
 
-//    @PostMapping("/signin")
-//    public ResponseEntity<CommonResp> signin(@RequestBody SigninReq signinReq) {
-//
-//    }
+    @PostMapping("/signin")
+    public ResponseEntity<CommonResp> signin(@RequestBody @Valid SigninReq signinReq, HttpServletResponse resp) {
+        return RespBuilder.make(HttpStatus.OK, "Succeed", authService.signin(signinReq, resp));
+    }
 
 }

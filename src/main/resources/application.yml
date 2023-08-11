@@ -7,5 +7,5 @@ server:
   servlet:
     context-path: /api/v1
 
-jwt-config:
-  key-string: ${random.int} // 서버 재부팅 시 이전에 발급받은 모든 JWT는 Invalud 된다.
+#jwt-config:
+#  key-string: ${random.int}

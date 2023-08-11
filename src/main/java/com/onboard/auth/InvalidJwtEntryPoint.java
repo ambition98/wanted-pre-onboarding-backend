@@ -20,10 +20,10 @@ public class InvalidJwtEntryPoint implements AuthenticationEntryPoint {
                          AuthenticationException authException) throws IOException, ServletException {
 
         log.info("Invalid JWT");
+        resp.setContentType("application/json; charset=UTF-8");
         PrintWriter writer =  resp.getWriter();
-        resp.setHeader("Content-Type", "application/json");
         resp.setStatus(HttpStatus.UNAUTHORIZED.value());
-        String response = "{httpStatus: " + HttpStatus.UNAUTHORIZED + ", msg: 로그인이 필요합니다.}";
+        String response = "{\"httpStatus\": \"" + HttpStatus.UNAUTHORIZED + "\", \"msg\": \"로그인이 필요합니다.\"}";
 
         writer.print(response);
         writer.flush();

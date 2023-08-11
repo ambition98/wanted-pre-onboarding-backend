@@ -2,18 +2,24 @@ package com.onboard.config;
 
 import com.onboard.auth.InvalidJwtEntryPoint;
 import com.onboard.auth.UserRole;
+import com.onboard.filter.JwtAuthFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -21,12 +27,12 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .logout().disable()
 
-//                .headers().frameOptions().sameOrigin()
-//                .and()
+                .headers().frameOptions().sameOrigin()
+                .and()
 
-//                .cors().configurationSource(corsConfigSource())
-//                .and()
-                .cors().disable()
+                .cors().configurationSource(corsConfigSource())
+                .and()
+//                .cors().disable()
 
                 .csrf().disable()
 
@@ -38,7 +44,7 @@ public class SecurityConfig {
                 .exceptionHandling().authenticationEntryPoint(new InvalidJwtEntryPoint())
                 .and()
 
-//                .addfilterbe
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

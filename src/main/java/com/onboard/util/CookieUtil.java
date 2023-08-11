@@ -20,6 +20,10 @@ public class CookieUtil {
     // 중복 이름을 가진 쿠키에 대한 처리는 적용하지 않음
     public Cookie getCookie(HttpServletRequest req, String key) {
         Cookie[] cookies = req.getCookies();
+        if (cookies == null || cookies.length < 1) {
+            return null;
+        }
+
         Cookie[] res = Arrays.stream(cookies)
                 .filter(cookie -> cookie.getName().equals(key))
                 .toArray(Cookie[]::new);
