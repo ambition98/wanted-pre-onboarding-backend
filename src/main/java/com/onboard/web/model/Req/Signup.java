@@ -9,7 +9,8 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-public class SigninReq {
+public class Signup {
+
     @NotEmpty
     @Pattern(regexp = "^.+@.+$", message = "잘못된 형식입니다.")
     private String email;

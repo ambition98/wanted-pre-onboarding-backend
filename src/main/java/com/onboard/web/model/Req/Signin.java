@@ -1,7 +1,6 @@
 package com.onboard.web.model.Req;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
@@ -10,8 +9,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-public class SignupReq {
-
+public class Signin {
     @NotEmpty
     @Pattern(regexp = "^.+@.+$", message = "잘못된 형식입니다.")
     private String email;

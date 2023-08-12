@@ -15,9 +15,14 @@ import java.util.stream.Collectors;
 @RestControllerAdvice(basePackages = "com.onboard.web.controller")
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<CommonResp> unauthorizedExceptionHandler(UnauthorizedException e) {
+        return RespBuilder.make(HttpStatus.UNAUTHORIZED, e.getMessage());
+    }
+
     // API 요청 파라미터 값의 유효성 위반
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<CommonResp> inValidArgumentException(MethodArgumentNotValidException e) {
+    public ResponseEntity<CommonResp> invalidArgumentExceptionHandler(MethodArgumentNotValidException e) {
         String msg = e.getFieldErrors()
                 .stream()
                 .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())

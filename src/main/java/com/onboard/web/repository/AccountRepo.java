@@ -11,5 +11,5 @@ import java.util.Optional;
 @Transactional
 public interface AccountRepo extends JpaRepository<AccountEntity, String> {
     @Transactional(readOnly = true)
-    public Optional<AccountEntity> findByEmail(String email);
+    Optional<AccountEntity> findByEmail(String email);
 }

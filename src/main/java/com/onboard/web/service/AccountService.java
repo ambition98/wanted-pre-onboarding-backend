@@ -1,19 +1,18 @@
 package com.onboard.web.service;
 
-import com.onboard.auth.JwtState;
 import com.onboard.util.JwtUtil;
 import com.onboard.web.entity.AccountEntity;
 import com.onboard.web.model.Resp.AccountDto;
 import com.onboard.web.repository.AccountRepo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AccountService {
 
     private final AccountRepo accountRepo;

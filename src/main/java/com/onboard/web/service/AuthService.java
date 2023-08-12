@@ -3,8 +3,8 @@ package com.onboard.web.service;
 import com.onboard.util.JwtUtil;
 import com.onboard.web.entity.AccountEntity;
 import com.onboard.web.entity.AccountPwEntity;
-import com.onboard.web.model.Req.SigninReq;
-import com.onboard.web.model.Req.SignupReq;
+import com.onboard.web.model.Req.Signin;
+import com.onboard.web.model.Req.Signup;
 import com.onboard.web.model.Resp.AccountDto;
 import com.onboard.web.repository.AccountPwRepo;
 import com.onboard.web.repository.AccountRepo;
@@ -27,31 +27,27 @@ public class AuthService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public boolean signup(SignupReq signupReq) {
+    public boolean signup(Signup signup) {
         // Save new AccountPwEntity
-        String digest = bCryptPasswordEncoder.encode(signupReq.getPassword());
+        String digest = bCryptPasswordEncoder.encode(signup.getPassword());
         AccountPwEntity accountPwEntity = new AccountPwEntity(digest);
         AccountPwEntity accountPwRes = accountPwRepo.save(accountPwEntity);
 
         // Save new AccountEntity
-        AccountEntity accountEntity = new AccountEntity(signupReq.getEmail(), accountPwRes);
-//        log.info(accountEntity.getId());
-//        log.info(accountEntity.getEmail());
-//        log.info(accountEntity.getAccountPwEntity().getId());
-//        log.info(accountEntity.getAccountPwEntity().getPassword());
+        AccountEntity accountEntity = new AccountEntity(signup.getEmail(), accountPwRes);
         AccountEntity res = accountRepo.save(accountEntity);
 
         return accountEntity.getId().equals(res.getId());
     }
 
-    public AccountDto signin(SigninReq signinReq, HttpServletResponse resp) {
+    public AccountDto signin(Signin signin, HttpServletResponse resp) {
         AccountEntity accountEntity
-                = accountRepo.findByEmail(signinReq.getEmail())
+                = accountRepo.findByEmail(signin.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("아이디 또는 패스워드가 틀립니다."));
 
         AccountPwEntity accountPwEntity = accountEntity.getAccountPwEntity();
 
-        if (!bCryptPasswordEncoder.matches(signinReq.getPassword(), accountPwEntity.getPassword())) {
+        if (!bCryptPasswordEncoder.matches(signin.getPassword(), accountPwEntity.getPassword())) {
             throw new IllegalArgumentException("아이디 또는 패스워드가 틀립니다.");
         }
 

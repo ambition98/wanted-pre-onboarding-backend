@@ -1,7 +1,7 @@
 package com.onboard.web.controller;
 
-import com.onboard.web.model.Req.SigninReq;
-import com.onboard.web.model.Req.SignupReq;
+import com.onboard.web.model.Req.Signin;
+import com.onboard.web.model.Req.Signup;
 import com.onboard.web.model.Resp.CommonResp;
 import com.onboard.web.model.Resp.RespBuilder;
 import com.onboard.web.service.AuthService;
@@ -24,18 +24,17 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<CommonResp> signup(@RequestBody @Valid SignupReq signupReq) {
-        if (authService.signup(signupReq)) {
+    public ResponseEntity<CommonResp> signup(@RequestBody @Valid Signup signup) {
+        if (authService.signup(signup)) {
             return RespBuilder.make(HttpStatus.OK, "Succeed");
         } else {
             return RespBuilder.make(HttpStatus.BAD_REQUEST, "Failed");
         }
-
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<CommonResp> signin(@RequestBody @Valid SigninReq signinReq, HttpServletResponse resp) {
-        return RespBuilder.make(HttpStatus.OK, "Succeed", authService.signin(signinReq, resp));
+    public ResponseEntity<CommonResp> signin(@RequestBody @Valid Signin signin, HttpServletResponse resp) {
+        return RespBuilder.make(HttpStatus.OK, "Succeed", authService.signin(signin, resp));
     }
 
 }

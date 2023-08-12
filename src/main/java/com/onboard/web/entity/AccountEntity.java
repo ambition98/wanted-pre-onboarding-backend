@@ -1,14 +1,16 @@
 package com.onboard.web.entity;
 
 import de.huxhorn.sulky.ulid.ULID;
-import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity(name = "ACCOUNT")
 @Getter
-@EqualsAndHashCode(callSuper = false, of = {"id"})
+@Builder
+@AllArgsConstructor
 public class AccountEntity extends BaseEntity {
 
     public AccountEntity() {
@@ -22,14 +24,17 @@ public class AccountEntity extends BaseEntity {
     }
 
     @Id
-    @Column(columnDefinition = "CHAR(26)")
+    @Column(columnDefinition = "CHAR(26)", nullable = false)
     private String id;
 
-    @Column(length = 256) //IETF 기준 맥시멈
+    @Column(length = 256, nullable = false) //IETF 기준 맥시멈
     private String email;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_pw_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    // Account 를 등록, 삭제하면 AccountPw 까지 등록, 삭제된다.
+    // Account 의 비밀번호 변경 시 AccountPw 하나가 Orphan 상태가 된다.
+    // 필요 없어지는 데이터 이므로 삭제한다.
+    @JoinColumn(name = "ACCOUNT_PW_ID", nullable = false)
     private AccountPwEntity accountPwEntity;
 
 }

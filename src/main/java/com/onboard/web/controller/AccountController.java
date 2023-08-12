@@ -1,6 +1,5 @@
 package com.onboard.web.controller;
 
-import com.onboard.util.JwtUtil;
 import com.onboard.web.model.Resp.CommonResp;
 import com.onboard.web.model.Resp.RespBuilder;
 import com.onboard.web.service.AccountService;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @RestController
@@ -22,11 +20,9 @@ import java.security.Principal;
 public class AccountController {
 
     private final AccountService accountService;
-    private final JwtUtil jwtUtil;
 
-    @GetMapping("/test")
-    public ResponseEntity<CommonResp> test(Principal principal) {
-        log.info("/user/test");
+    @GetMapping("/check")
+    public ResponseEntity<CommonResp> check(Principal principal) {
         return RespBuilder.make(HttpStatus.OK, "Succeed", accountService.getById(principal.getName()));
     }
 
