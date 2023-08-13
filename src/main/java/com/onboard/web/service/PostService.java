@@ -11,6 +11,7 @@ import com.onboard.web.repository.PostRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -25,15 +26,18 @@ public class PostService {
     private final PostRepo postRepo;
     private final AccountRepo accountRepo;
 
-    public List<PostDto> getPosts(int page) {
-        PageRequest pageRequest = PageRequest.of(page - 1, 10);
-        List<PostEntity> postEntities = postRepo.findAllWithPage(pageRequest);
-        List<PostDto> posts = new ArrayList<>();
-        for (PostEntity postEntity : postEntities) {
-            posts.add(PostDto.bulid(postEntity));
-        }
+    public List<PostDto> getPosts(Pageable pageable) {
+        log.info(pageable.toString());
+//        PageRequest pageRequest = PageRequest.of(page - 1, 10);
+//        List<PostEntity> postEntities = postRepo.findAll(pageRequest);
+//        List<PostDto> posts = new ArrayList<>();
+//        for (PostEntity postEntity : postEntities) {
+//            posts.add(PostDto.bulid(postEntity));
+//        }
+//
+//        return posts;
 
-        return posts;
+        return null;
     }
 
     public PostDto saveNewPost(SaveNewPost saveNewPost, String accountId) {

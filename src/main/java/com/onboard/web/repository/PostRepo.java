@@ -1,6 +1,7 @@
 package com.onboard.web.repository;
 
 import com.onboard.web.entity.PostEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -11,5 +12,5 @@ import java.util.List;
 @Repository
 @Transactional
 public interface PostRepo extends JpaRepository<PostEntity, Long> {
-    List<PostEntity> findAllWithPage(PageRequest pageRequest);
+//    Page<PostEntity> findAll(PageRequest pageRequest);
 }
