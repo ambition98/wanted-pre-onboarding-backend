@@ -25,11 +25,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<CommonResp> signup(@RequestBody @Valid Signup signup) {
-        if (authService.signup(signup)) {
-            return RespBuilder.make(HttpStatus.OK, "Succeed");
-        } else {
-            return RespBuilder.make(HttpStatus.BAD_REQUEST, "Failed");
-        }
+        return RespBuilder.make(HttpStatus.OK, "Succeed", authService.signup(signup));
     }
 
     @PostMapping("/signin")

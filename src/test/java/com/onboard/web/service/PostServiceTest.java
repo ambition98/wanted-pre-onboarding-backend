@@ -14,7 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -30,7 +33,7 @@ import static org.mockito.Mockito.when;
 class PostServiceTest {
 
     private static final String ACCOUNT_ID = "id";
-    private static final int POST_SIZE = 10;
+    private static final int PAGE_SIZE = 10;
     private static final Long POST_ID = 1L;
     private static final String TITLE = "title";
     private static final String CONTENT = "content";
@@ -50,26 +53,31 @@ class PostServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-//    @Test
-//    void POST_목록_가져오기() {
-//        //given
-//        List<PostEntity> postEntities = createPosts();
-//        when(postRepo.findAll((PageRequest) any()))
-//                .thenReturn(postEntities);
-//
-//        //when
-//        List<PostDto> posts = postService.getPosts(1);
-//
-//        //then
-//        assertThat(posts.size()).isEqualTo(POST_SIZE);
-//        for (int i=0; i<POST_SIZE; i++) {
-//            PostEntity entity = postEntities.get(i);
-//            PostDto dto = posts.get(i);
-//            assertThat(dto.getId()).isEqualTo(entity.getId());
-//            assertThat(dto.getTitle()).isEqualTo(entity.getTitle());
-//            assertThat(dto.getContent()).isEqualTo(entity.getContent());
-//        }
-//    }
+    @Test
+    void POST_목록_가져오기() {
+        //given
+        List<PostEntity> postEntities = createPosts();
+        PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), postEntities.size());
+        Page<PostEntity> page = new PageImpl<>(postEntities.subList(start, end));
+        when(postRepo.findAll((Pageable) any()))
+                .thenReturn(page);
+        Pageable pageable = Pageable.ofSize(PAGE_SIZE);
+
+        //when
+        List<PostDto> posts = postService.getPosts(pageable);
+
+        //then
+        assertThat(posts.size()).isEqualTo(PAGE_SIZE);
+        for (int i = 0; i< PAGE_SIZE; i++) {
+            PostEntity entity = postEntities.get(i);
+            PostDto dto = posts.get(i);
+            assertThat(dto.getId()).isEqualTo(entity.getId());
+            assertThat(dto.getTitle()).isEqualTo(entity.getTitle());
+            assertThat(dto.getContent()).isEqualTo(entity.getContent());
+        }
+    }
 
     @Test
     void POST_한_개_가져오기() {
@@ -115,10 +123,10 @@ class PostServiceTest {
         when(postRepo.save(any())).thenReturn(postEntity);
 
         //when
-        PostDto postDto = postService.updateById(POST_ID, updatePost, ACCOUNT_ID);
+        PostDto postDto = postService.updateById(updatePost, ACCOUNT_ID);
 
         //then
-        assertThat(postDto.getId()).isEqualTo(POST_ID);
+        assertThat(postDto.getId()).isEqualTo(updatePost.getId());
         assertThat(postDto.getId()).isEqualTo(postEntity.getId());
         assertThat(postDto.getTitle()).isEqualTo(updatePost.getTitle());
         assertThat(postDto.getContent()).isEqualTo(updatePost.getContent());
@@ -149,7 +157,7 @@ class PostServiceTest {
         //then
         assertThatThrownBy(() -> postService.getById(wrongId))
                 .isInstanceOf(EntityNotFoundException.class);
-        assertThatThrownBy(() -> postService.updateById(wrongId, new UpdatePost(), ACCOUNT_ID))
+        assertThatThrownBy(() -> postService.updateById(new UpdatePost(), ACCOUNT_ID))
                 .isInstanceOf(EntityNotFoundException.class);
         assertThatThrownBy(() -> postService.deleteById(wrongId, ACCOUNT_ID))
                 .isInstanceOf(EntityNotFoundException.class);
@@ -176,15 +184,15 @@ class PostServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> postService.updateById(POST_ID, updatePost, wrongAccountId))
+        assertThatThrownBy(() -> postService.updateById(updatePost, wrongAccountId))
                 .isInstanceOf(UnauthorizedException.class);
         assertThatThrownBy(() -> postService.deleteById(POST_ID, wrongAccountId))
                 .isInstanceOf(UnauthorizedException.class);
     }
 
     private List<PostEntity> createPosts() {
-        List<PostEntity> posts = new ArrayList<>(POST_SIZE);
-        for (int i = 0; i< POST_SIZE; i++) {
+        List<PostEntity> posts = new ArrayList<>(PAGE_SIZE);
+        for (int i = 0; i< PAGE_SIZE; i++) {
             posts.add(createPostEntity());
         }
 
@@ -208,11 +216,10 @@ class PostServiceTest {
     }
 
     private UpdatePost createUpdatePost() {
-        String updatedTitle = "uTitle";
-        String updatedContent = "uContent";
         UpdatePost updatePost = new UpdatePost();
-        updatePost.setTitle(updatedTitle);
-        updatePost.setContent(updatedContent);
+        updatePost.setId(1L);
+        updatePost.setTitle("uTitle");
+        updatePost.setContent("uContent");
         return updatePost;
     }
 }

@@ -10,7 +10,6 @@ import com.onboard.web.repository.AccountRepo;
 import com.onboard.web.repository.PostRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -27,17 +26,13 @@ public class PostService {
     private final AccountRepo accountRepo;
 
     public List<PostDto> getPosts(Pageable pageable) {
-        log.info(pageable.toString());
-//        PageRequest pageRequest = PageRequest.of(page - 1, 10);
-//        List<PostEntity> postEntities = postRepo.findAll(pageRequest);
-//        List<PostDto> posts = new ArrayList<>();
-//        for (PostEntity postEntity : postEntities) {
-//            posts.add(PostDto.bulid(postEntity));
-//        }
-//
-//        return posts;
+        List<PostEntity> postEntities = postRepo.findAll(pageable).getContent();
+        List<PostDto> posts = new ArrayList<>();
+        for (PostEntity postEntity : postEntities) {
+            posts.add(PostDto.bulid(postEntity));
+        }
 
-        return null;
+        return posts;
     }
 
     public PostDto saveNewPost(SaveNewPost saveNewPost, String accountId) {
@@ -67,8 +62,8 @@ public class PostService {
         }
     }
 
-    public PostDto updateById(Long postId, UpdatePost updatePost, String accountId) {
-       PostEntity postEntity = getExistsEntity(postId);
+    public PostDto updateById(UpdatePost updatePost, String accountId) {
+       PostEntity postEntity = getExistsEntity(updatePost.getId());
 
         if (postEntity.getWriter().getId().equals(accountId)) {
             postEntity.setTitle(updatePost.getTitle());
