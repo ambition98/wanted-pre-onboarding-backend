@@ -2,7 +2,7 @@ package com.onboard.util;
 
 import com.onboard.auth.JwtState;
 import com.onboard.auth.UserRole;
-import com.onboard.auth.onboardingAuthentication;
+import com.onboard.auth.WantedAuthentication;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +32,8 @@ public class JwtUtil {
     private final CookieUtil cookieUtil;
     private final Key key;
     private final JwtParser jwtParser;
-//    private final long accessTokenExpiryMs = 30 * 60 * 1000; // 30분
-    private final long accessTokenExpiryMs = 30 * 1000; // 30초, 디버그용
+    private final long accessTokenExpiryMs = 30 * 60 * 1000; // 30분
+//    private final long accessTokenExpiryMs = 30 * 1000; // 30초, 디버그용
     private final String authoritiesKey = "role";
     private final String cookieName = "tk";
 
@@ -77,7 +77,7 @@ public class JwtUtil {
             List<GrantedAuthority> authorities
                     = Collections.singletonList(new SimpleGrantedAuthority(claims.get(authoritiesKey).toString()));
             Object id = claims.getId();
-            return new onboardingAuthentication(id, token, authorities);
+            return new WantedAuthentication(id, token, authorities);
         } catch (Exception e) {
             return new AnonymousAuthenticationToken(
                     UUID.randomUUID().toString(), "anonymousUser",

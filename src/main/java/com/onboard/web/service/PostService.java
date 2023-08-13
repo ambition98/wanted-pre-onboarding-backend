@@ -10,7 +10,7 @@ import com.onboard.web.repository.AccountRepo;
 import com.onboard.web.repository.PostRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -25,9 +25,8 @@ public class PostService {
     private final PostRepo postRepo;
     private final AccountRepo accountRepo;
 
-    public List<PostDto> getPosts(int page) {
-        PageRequest pageRequest = PageRequest.of(page - 1, 10);
-        List<PostEntity> postEntities = postRepo.findAllWithPage(pageRequest);
+    public List<PostDto> getPosts(Pageable pageable) {
+        List<PostEntity> postEntities = postRepo.findAll(pageable).getContent();
         List<PostDto> posts = new ArrayList<>();
         for (PostEntity postEntity : postEntities) {
             posts.add(PostDto.bulid(postEntity));
@@ -63,8 +62,8 @@ public class PostService {
         }
     }
 
-    public PostDto updateById(Long postId, UpdatePost updatePost, String accountId) {
-       PostEntity postEntity = getExistsEntity(postId);
+    public PostDto updateById(UpdatePost updatePost, String accountId) {
+       PostEntity postEntity = getExistsEntity(updatePost.getId());
 
         if (postEntity.getWriter().getId().equals(accountId)) {
             postEntity.setTitle(updatePost.getTitle());

@@ -5,11 +5,11 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
-public class onboardingAuthentication extends AbstractAuthenticationToken {
+public class WantedAuthentication extends AbstractAuthenticationToken {
     private final Object principal;
     private final Object credentials;
 
-    public onboardingAuthentication(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
+    public WantedAuthentication(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         super.setAuthenticated(true);
         this.principal = principal;

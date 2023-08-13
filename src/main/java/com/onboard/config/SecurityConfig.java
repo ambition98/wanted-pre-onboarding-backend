@@ -1,7 +1,6 @@
 package com.onboard.config;
 
 import com.onboard.auth.InvalidJwtEntryPoint;
-import com.onboard.auth.UserRole;
 import com.onboard.filter.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -32,12 +31,11 @@ public class SecurityConfig {
 
                 .cors().configurationSource(corsConfigSource())
                 .and()
-//                .cors().disable()
 
                 .csrf().disable()
 
                 .authorizeRequests()
-                .antMatchers("/user/**").hasRole(UserRole.USER.getKey())
+//                .antMatchers("/user/**").hasRole(UserRole.USER.getKey())
                 .anyRequest().permitAll()
                 .and()
 

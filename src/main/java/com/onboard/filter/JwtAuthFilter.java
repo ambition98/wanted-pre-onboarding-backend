@@ -28,7 +28,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String jwt = jwtUtil.getTokenFromCookie(req);
         log.info("jwt: " + jwt);
 
-        // JWT 상태에 따라 OnboardingAuthentication 이나 AnonymousAuthentication 발급
+        // JWT 상태에 따라 WantedAuthentication 이나 AnonymousAuthentication 발급
         Authentication authentication = jwtUtil.makeAuthentication(jwt);
         log.info("auth: " + authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
