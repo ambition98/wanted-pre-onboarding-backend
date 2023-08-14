@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  mysql-wanted:
+    container_name: mysql-wanted
+    build:
+      context: .
+      dockerfile: DockerFile
+    image: mysql:8.0.22
+    environment:
+      - MYSQL_DATABASE=wanted
+      - MYSQL_USER=${MY_MYSQL-WANTED-USER} # 시스템 환경 변수
+      - MYSQL_PASSWORD=${MY_MYSQL-WANTED-PASSWORD} #시스템 환경 변수
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    networks:
+      - wanted-network
+    volumes:
+      - mysql_volume:~/docker-volumes/mysql-wanted
+  springboot-wanted:
+    container_name: springboot-wanted
+    ports:
+      - "80:80"
+    image: localhost/wanted-backend:0.0.1
+    networks:
+      - wanted-network
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://bogeum.xyz:3306/wanted
+    volumes:
+      - backend_images:~/docker-volumes/springboot-wanted
+
+networks:
+  wanted-network:
+    driver: bridge
