@@ -11,16 +11,16 @@ import javax.persistence.*;
 @Getter
 @Builder
 @AllArgsConstructor
-public class AccountEntity extends BaseEntity {
+public class Account extends BaseEntity {
 
-    public AccountEntity() {
+    public Account() {
         this.id = new ULID().nextULID();
     }
 
-    public AccountEntity(String email, AccountPwEntity accountPwEntity) {
+    public Account(String email, AccountPw accountPw) {
         this.id = new ULID().nextULID();
         this.email = email;
-        this.accountPwEntity = accountPwEntity;
+        this.accountPw = accountPw;
     }
 
     @Id
@@ -35,6 +35,6 @@ public class AccountEntity extends BaseEntity {
     // Account 의 비밀번호 변경 시 AccountPw 하나가 Orphan 상태가 된다.
     // 필요 없어지는 데이터 이므로 삭제한다.
     @JoinColumn(name = "ACCOUNT_PW_ID", nullable = false)
-    private AccountPwEntity accountPwEntity;
+    private AccountPw accountPw;
 
 }

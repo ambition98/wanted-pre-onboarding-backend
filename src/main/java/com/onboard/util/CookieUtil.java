@@ -9,6 +9,9 @@ import java.util.Arrays;
 
 @Component
 public class CookieUtil {
+
+    private static final String JWT_COOKIE_NAME = "tk";
+
     public void setCookie(HttpServletResponse resp, String key, String value) {
         resp.addCookie(makeCookie(key, value));
     }
@@ -30,6 +33,17 @@ public class CookieUtil {
 
         if (res.length > 0) return res[0];
         else return null;
+    }
+
+    public void setTokenToCookie(HttpServletResponse resp, String tk) {
+        setCookie(resp, JWT_COOKIE_NAME, tk);
+    }
+
+    public String getTokenFromCookie(HttpServletRequest req) {
+        Cookie cookie = getCookie(req, JWT_COOKIE_NAME);
+        if (cookie == null) return null;
+
+        return cookie.getValue();
     }
 
     private Cookie makeCookie(String key, String value) {

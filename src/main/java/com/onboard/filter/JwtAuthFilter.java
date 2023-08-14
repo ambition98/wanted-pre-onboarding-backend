@@ -1,5 +1,6 @@
 package com.onboard.filter;
 
+import com.onboard.util.CookieUtil;
 import com.onboard.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +21,13 @@ import java.io.IOException;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse resp, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String jwt = jwtUtil.getTokenFromCookie(req);
+        String jwt = cookieUtil.getTokenFromCookie(req);
         log.info("jwt: " + jwt);
 
         // JWT 상태에 따라 WantedAuthentication 이나 AnonymousAuthentication 발급

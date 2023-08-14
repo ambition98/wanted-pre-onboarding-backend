@@ -1,11 +1,11 @@
 package com.onboard.web.service;
 
 import com.onboard.exception.UnauthorizedException;
-import com.onboard.web.entity.AccountEntity;
-import com.onboard.web.entity.PostEntity;
+import com.onboard.web.entity.Account;
+import com.onboard.web.entity.Post;
 import com.onboard.web.model.Req.SaveNewPost;
 import com.onboard.web.model.Req.UpdatePost;
-import com.onboard.web.model.Resp.PostDto;
+import com.onboard.web.model.Resp.PostResp;
 import com.onboard.web.repository.AccountRepo;
 import com.onboard.web.repository.PostRepo;
 import lombok.RequiredArgsConstructor;
@@ -25,57 +25,57 @@ public class PostService {
     private final PostRepo postRepo;
     private final AccountRepo accountRepo;
 
-    public List<PostDto> getPosts(Pageable pageable) {
-        List<PostEntity> postEntities = postRepo.findAll(pageable).getContent();
-        List<PostDto> posts = new ArrayList<>();
-        for (PostEntity postEntity : postEntities) {
-            posts.add(PostDto.bulid(postEntity));
+    public List<PostResp> getPosts(Pageable pageable) {
+        List<Post> posts = postRepo.findAll(pageable).getContent();
+        List<PostResp> postRespList = new ArrayList<>(posts.size());
+        for (Post post : posts) {
+            postRespList.add(PostResp.bulid(post));
         }
 
-        return posts;
+        return postRespList;
     }
 
-    public PostDto saveNewPost(SaveNewPost saveNewPost, String accountId) {
-        AccountEntity accountEntity = accountRepo.findById(accountId)
+    public PostResp saveNewPost(SaveNewPost saveNewPost, String accountId) {
+        Account account = accountRepo.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("계정을 찾을 수 없습니다."));
 
-        PostEntity postEntity = PostEntity.builder()
+        Post post = Post.builder()
                 .title(saveNewPost.getTitle())
                 .content(saveNewPost.getContent())
-                .writer(accountEntity)
+                .writer(account)
                 .build();
 
-        return PostDto.bulid(postRepo.save(postEntity));
+        return PostResp.bulid(postRepo.save(post));
     }
 
-    public PostDto getById(Long postId) {
-        return PostDto.bulid(getExistsEntity(postId));
+    public PostResp getById(Long postId) {
+        return PostResp.bulid(getExistsEntity(postId));
     }
 
     public void deleteById(Long postId, String accountId) {
-        PostEntity postEntity = getExistsEntity(postId);
+        Post post = getExistsEntity(postId);
 
-        if (postEntity.getWriter().getId().equals(accountId)) {
-            postRepo.deleteById(postEntity.getId());
+        if (post.getWriter().getId().equals(accountId)) {
+            postRepo.deleteById(post.getId());
         } else {
             throw new UnauthorizedException("삭제 권한이 없습니다.");
         }
     }
 
-    public PostDto updateById(UpdatePost updatePost, String accountId) {
-       PostEntity postEntity = getExistsEntity(updatePost.getId());
+    public PostResp updateById(UpdatePost updatePost, String accountId) {
+       Post post = getExistsEntity(updatePost.getId());
 
-        if (postEntity.getWriter().getId().equals(accountId)) {
-            postEntity.setTitle(updatePost.getTitle());
-            postEntity.setContent(updatePost.getContent());
-            return PostDto.bulid(postRepo.save(postEntity));
+        if (post.getWriter().getId().equals(accountId)) {
+            post.setTitle(updatePost.getTitle());
+            post.setContent(updatePost.getContent());
+            return PostResp.bulid(postRepo.save(post));
 
         } else {
             throw new UnauthorizedException("수정 권한이 없습니다.");
         }
     }
 
-    private PostEntity getExistsEntity(Long id) {
+    private Post getExistsEntity(Long id) {
         return postRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
     }

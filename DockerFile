@@ -1,0 +1,4 @@
+FROM openjdk:8
+COPY *.jar wanted-backend.jar
+ENTRYPOINT ["java", "-jar", "/wanted-backend.jar"]
+

@@ -9,13 +9,13 @@ import javax.persistence.Id;
 
 @Entity(name = "ACCOUNT_PW")
 @Getter
-public class AccountPwEntity extends BaseEntity {
+public class AccountPw extends BaseEntity {
 
-    public AccountPwEntity() {
+    public AccountPw() {
         this.id = new ULID().nextULID();
     }
 
-    public AccountPwEntity(String password) {
+    public AccountPw(String password) {
         this.id = new ULID().nextULID();
         this.password = password;
     }
