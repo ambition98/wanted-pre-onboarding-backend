@@ -1,15 +1,14 @@
 package com.onboard.web.service;
 
 import com.onboard.exception.UnauthorizedException;
-import com.onboard.web.entity.AccountEntity;
-import com.onboard.web.entity.PostEntity;
+import com.onboard.web.entity.Account;
+import com.onboard.web.entity.Post;
 import com.onboard.web.model.Req.SaveNewPost;
 import com.onboard.web.model.Req.UpdatePost;
-import com.onboard.web.model.Resp.PostDto;
+import com.onboard.web.model.Resp.PostResp;
 import com.onboard.web.repository.AccountRepo;
 import com.onboard.web.repository.PostRepo;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,7 +28,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@DisplayName("PostServiceTest")
 class PostServiceTest {
 
     private static final String ACCOUNT_ID = "id";
@@ -41,10 +39,8 @@ class PostServiceTest {
 
     @InjectMocks
     private PostService postService;
-
     @Mock
     private PostRepo postRepo;
-
     @Mock
     private AccountRepo accountRepo;
 
@@ -56,23 +52,23 @@ class PostServiceTest {
     @Test
     void POST_목록_가져오기() {
         //given
-        List<PostEntity> postEntities = createPosts();
+        List<Post> postEntities = createPosts();
         PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE);
         int start = (int) pageRequest.getOffset();
         int end = Math.min((start + pageRequest.getPageSize()), postEntities.size());
-        Page<PostEntity> page = new PageImpl<>(postEntities.subList(start, end));
+        Page<Post> page = new PageImpl<>(postEntities.subList(start, end));
         when(postRepo.findAll((Pageable) any()))
                 .thenReturn(page);
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
 
         //when
-        List<PostDto> posts = postService.getPosts(pageable);
+        List<PostResp> posts = postService.getPosts(pageable);
 
         //then
         assertThat(posts.size()).isEqualTo(PAGE_SIZE);
         for (int i = 0; i< PAGE_SIZE; i++) {
-            PostEntity entity = postEntities.get(i);
-            PostDto dto = posts.get(i);
+            Post entity = postEntities.get(i);
+            PostResp dto = posts.get(i);
             assertThat(dto.getId()).isEqualTo(entity.getId());
             assertThat(dto.getTitle()).isEqualTo(entity.getTitle());
             assertThat(dto.getContent()).isEqualTo(entity.getContent());
@@ -82,68 +78,68 @@ class PostServiceTest {
     @Test
     void POST_한_개_가져오기() {
         //given
-        PostEntity postEntity = createPostEntity();
-        when(postRepo.findById(any())).thenReturn(Optional.of(postEntity));
+        Post post = createPostEntity();
+        when(postRepo.findById(any())).thenReturn(Optional.of(post));
 
         //when
-        PostDto postDto = postService.getById(postEntity.getId());
+        PostResp postResp = postService.getById(post.getId());
 
         //then
-        assertThat(postDto.getId()).isEqualTo(postEntity.getId());
+        assertThat(postResp.getId()).isEqualTo(post.getId());
     }
 
     @Test
-    void 새로운_POST_저장() {
+    void 새로운_Post_저장() {
         //given
         SaveNewPost saveNewPost = new SaveNewPost();
         saveNewPost.setTitle(TITLE);
         saveNewPost.setContent(CONTENT);
-        PostEntity postEntity = createPostEntity();
-        AccountEntity accountEntity = createAccountEntity();
+        Post post = createPostEntity();
+        Account account = createAccountEntity();
 
-        when(accountRepo.findById(any())).thenReturn(Optional.of(accountEntity));
-        when(postRepo.save(any())).thenReturn(postEntity);
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
+        when(postRepo.save(any())).thenReturn(post);
 
         //when
-        PostDto postDto = postService.saveNewPost(saveNewPost, ACCOUNT_ID);
+        PostResp postResp = postService.saveNewPost(saveNewPost, ACCOUNT_ID);
 
         //then
-        assertThat(postDto.getTitle()).isEqualTo(saveNewPost.getTitle());
-        assertThat(postDto.getContent()).isEqualTo(saveNewPost.getContent());
-        assertThat(postDto.getWriterEmail()).isEqualTo(accountEntity.getEmail());
+        assertThat(postResp.getTitle()).isEqualTo(saveNewPost.getTitle());
+        assertThat(postResp.getContent()).isEqualTo(saveNewPost.getContent());
+        assertThat(postResp.getWriterEmail()).isEqualTo(account.getEmail());
     }
 
     @Test
     void Post_수정() {
         //given
         UpdatePost updatePost = createUpdatePost();
-        PostEntity postEntity = createPostEntity();
+        Post post = createPostEntity();
 
-        when(postRepo.findById(POST_ID)).thenReturn(Optional.of(postEntity));
-        when(postRepo.save(any())).thenReturn(postEntity);
+        when(postRepo.findById(POST_ID)).thenReturn(Optional.of(post));
+        when(postRepo.save(any())).thenReturn(post);
 
         //when
-        PostDto postDto = postService.updateById(updatePost, ACCOUNT_ID);
+        PostResp postResp = postService.updateById(updatePost, ACCOUNT_ID);
 
         //then
-        assertThat(postDto.getId()).isEqualTo(updatePost.getId());
-        assertThat(postDto.getId()).isEqualTo(postEntity.getId());
-        assertThat(postDto.getTitle()).isEqualTo(updatePost.getTitle());
-        assertThat(postDto.getContent()).isEqualTo(updatePost.getContent());
+        assertThat(postResp.getId()).isEqualTo(updatePost.getId());
+        assertThat(postResp.getId()).isEqualTo(post.getId());
+        assertThat(postResp.getTitle()).isEqualTo(updatePost.getTitle());
+        assertThat(postResp.getContent()).isEqualTo(updatePost.getContent());
     }
 
     @Test
     void Post_삭제() {
         //given
-        PostEntity postEntity = createPostEntity();
-        when(postRepo.findById(postEntity.getId())).thenReturn(Optional.of(postEntity));
+        Post post = createPostEntity();
+        when(postRepo.findById(post.getId())).thenReturn(Optional.of(post));
 
         //when
-        postService.deleteById(postEntity.getId(), ACCOUNT_ID);
+        postService.deleteById(post.getId(), ACCOUNT_ID);
         when(postRepo.findById(any())).thenReturn(Optional.empty());
 
         //then
-        assertThatThrownBy(() -> postService.deleteById(postEntity.getId(), ACCOUNT_ID))
+        assertThatThrownBy(() -> postService.deleteById(post.getId(), ACCOUNT_ID))
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
@@ -164,7 +160,7 @@ class PostServiceTest {
     }
 
     @Test
-    void 존재하지_않는_accountID() {
+    void 존재하지_않는_accountId() {
         //given
         String wrongId = "wrong";
         when(accountRepo.findById(wrongId)).thenThrow(new EntityNotFoundException());
@@ -190,8 +186,8 @@ class PostServiceTest {
                 .isInstanceOf(UnauthorizedException.class);
     }
 
-    private List<PostEntity> createPosts() {
-        List<PostEntity> posts = new ArrayList<>(PAGE_SIZE);
+    private List<Post> createPosts() {
+        List<Post> posts = new ArrayList<>(PAGE_SIZE);
         for (int i = 0; i< PAGE_SIZE; i++) {
             posts.add(createPostEntity());
         }
@@ -199,8 +195,8 @@ class PostServiceTest {
         return posts;
     }
 
-    private PostEntity createPostEntity() {
-        return PostEntity.builder()
+    private Post createPostEntity() {
+        return Post.builder()
                 .id(POST_ID)
                 .title(TITLE)
                 .content(CONTENT)
@@ -208,8 +204,8 @@ class PostServiceTest {
                 .build();
     }
 
-    private AccountEntity createAccountEntity() {
-        return AccountEntity.builder()
+    private Account createAccountEntity() {
+        return Account.builder()
                 .id(ACCOUNT_ID)
                 .email(EMAIL)
                 .build();

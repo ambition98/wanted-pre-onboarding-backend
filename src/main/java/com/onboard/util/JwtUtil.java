@@ -13,9 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Collections;
@@ -54,17 +51,6 @@ public class JwtUtil {
 
     public String makeUserToken(String id) {
         return generateToken(id, "Access Token", UserRole.USER, accessTokenExpiryMs);
-    }
-
-    public void setTokenToCookie(HttpServletResponse resp, String id) {
-        cookieUtil.setCookie(resp, cookieName, makeUserToken(id));
-    }
-
-    public String getTokenFromCookie(HttpServletRequest req) {
-        Cookie cookie = cookieUtil.getCookie(req, cookieName);
-        if (cookie == null) return null;
-
-        return cookie.getValue();
     }
 
     public Authentication makeAuthentication(String token) {

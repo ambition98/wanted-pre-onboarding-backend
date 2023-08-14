@@ -1,5 +1,7 @@
-package com.onboard.exception;
+package com.onboard.exception.handler;
 
+import com.onboard.exception.IncorrectLoginInfo;
+import com.onboard.exception.UnauthorizedException;
 import com.onboard.web.model.Resp.CommonResp;
 import com.onboard.web.model.Resp.RespBuilder;
 import lombok.extern.slf4j.Slf4j;

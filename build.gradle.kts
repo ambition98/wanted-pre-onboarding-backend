@@ -22,6 +22,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
 	implementation("de.huxhorn.sulky:de.huxhorn.sulky.ulid:8.3.0")
+	implementation("com.google.code.gson:gson:2.10.1")
+
 	implementation("com.h2database:h2")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
