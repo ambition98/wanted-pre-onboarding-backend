@@ -24,3 +24,4 @@ https://www.youtube.com/watch?v=XHYsATPGbOs
   유효하지 않은 JWT 이면 AnonymousAuthentication 을 발급하며, Role 이 필요한 URL에는 접근 불가
 
 ## API 명세서
+https://documenter.getpostman.com/view/27418658/2s9Xy6qV5G#e9a6682b-4a91-4856-bcf6-eeec61e3d784
