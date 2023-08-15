@@ -49,7 +49,7 @@ public class CookieUtil {
     private Cookie makeCookie(String key, String value) {
         Cookie cookie = new Cookie(key, value);
         cookie.setPath("/");
-        cookie.setSecure(true);
+//        cookie.setSecure(true);
         cookie.setHttpOnly(true);
         return cookie;
     }

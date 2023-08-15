@@ -2,3 +2,14 @@ spring:
   config:
     activate:
       on-profile: deploy
+
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://mysql-wanted/wanted?characterEncoding=UTF-8
+      username: root
+      password: mysqlpw
+
+logging:
+  file:
+    path: /var/log/spring

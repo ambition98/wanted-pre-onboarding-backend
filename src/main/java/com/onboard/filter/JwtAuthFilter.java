@@ -27,6 +27,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse resp, FilterChain filterChain)
             throws ServletException, IOException {
 
+        log.info("Request about " + req.getRemoteAddr() + " -> " + req.getMethod() + " " + req.getRequestURI());
+
         String jwt = cookieUtil.getTokenFromCookie(req);
         log.info("jwt: " + jwt);
 
